@@ -11,3 +11,8 @@ vagrant up
 vagrant ssh
 redis-cli set /foo/ true
 ```
+
+## Concerns
+* Ensure proper headers are passed to origins
+* [Connection reuse to proxies?](https://ma.ttias.be/enable-keepalive-connections-in-nginx-upstream-proxy-configurations/)
+* [TCP connection to Redis](https://github.com/openresty/lua-resty-redis#connect)
