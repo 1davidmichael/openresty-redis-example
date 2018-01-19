@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Add open resty repo
+      get_url:
+        url: https://openresty.org/package/centos/openresty.repo
+        dest: /etc/yum.repos.d/openresty.repo
+
+    - name: accept open resty gpg key
+      rpm_key:
+        state: present
+        key: https://openresty.org/package/pubkey.gpg
+
+    - name: Install required Epel repo
+      yum:
+        name: epel-release
+
+    - name: Install other packages
+      yum:
+        name: "{{ item }}"
+      with_items:
+        - redis
+        - openresty
+        - openresty-resty
+        - vim
+        - curl
+
+    - name: Add openresty config file
+      copy:
+        src: nginx.conf
+        dest: /usr/local/openresty/nginx/conf/nginx.conf
+
+    - name: start and enable services
+      service:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      with_items:
+        - redis
+        - openresty
